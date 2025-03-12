@@ -16,9 +16,9 @@ public:
 
   template <typename F>
     requires not_same_as<F, function>
-  function(F&& func)
+  function(F func)
       : _descriptor(_init_descriptor<std::decay_t<F>>()) {
-    model<std::decay_t<F>>::construct(_storage.data(), std::forward<F>(func));
+    model<std::decay_t<F>>::construct(_storage.data(), std::move(func));
   }
 
   function(const function& other)
@@ -82,7 +82,7 @@ private:
   alignas(std::max_align_t) mutable std::array<std::byte, kSmallSize> _storage;
 
   template <typename Tag>
-  static descriptor* _init_descriptor() {
+  inline static descriptor* _init_descriptor() {
     static model<Tag> initialized_model;
     return &initialized_model;
   }
