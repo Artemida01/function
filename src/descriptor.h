@@ -3,6 +3,7 @@
 #include <array>
 #include <cstddef>
 #include <exception>
+#include <functional>
 #include <memory>
 #include <new>
 #include <type_traits>
@@ -137,7 +138,7 @@ struct model<struct bad_call_tag, R(Args...)> final : concept_<R(Args...)> {
 public:
   static bad_call_tag* _get_pointer(std::byte*) = delete;
 
-  static bad_call_tag* target(std::byte*) {}
+  static bad_call_tag* target(std::byte*) = delete;
 
   R call(std::byte*, Args&&...) const override {
     throw bad_function_call();
